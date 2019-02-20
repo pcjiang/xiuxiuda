@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>进口系列 G-Studs</title>
+    <!--防止页面缓存-->
+    <!-- 
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache"> 
+    -->
+    <!-- 调用css -->
+    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/base.css">
+    <!-- 调用js -->
+    <script src="js/jquery-3.2.1.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/config.js"></script>
+    <script src="js/function.js"></script>
+    <script type="text/javascript">
+        //计算rem
+        remInit(document);
+        var code = getQueryString("code"); //获取微信code
+        var host_cabinet_id = getQueryString("host_cabinet_id"); //获取柜门id
+        $(function(){
+            getWxJsConfig();//获取权限
+        })
+    </script>
+</head>
+<body style="height: 100%">
+   <div class="outer">
+   </div>
+   <div class="loading"><img src="img/001.gif" alt=""></div>
+</body>
+<script>
+        $.ajax({
+            type:"get",
+            url:config.domainApi+"/host_cabinet/goodsDetail",
+            data:{host_cabinet_id,code},//柜门id
+            success:function(res){
+               checkLogin(res);
+               if(res.state==0){
+                   alert(res.msg);
+                   location.href="index.html";
+               }else{
+                   var token=res.token;
+                   var html="";
+                   var t=res.goods_info,is_hide;
+                   is_hide = parseInt(t.original_price) > parseInt(t.goods_price) ? "show" : "";
+                        html+='<div>';
+
+                        html+=   '<img src="'+t.goods_img+'" alt="" class="product">';
+
+                        html+='</div>';
+
+                        html+='<div class="changePrice">';
+
+                        html+=    '<h5 class="price">￥'+t.goods_price+'</h5>';
+
+                        html+=    '<p class="originalPrice '+is_hide+'">￥'+t.original_price+'</p>';
+
+                        html+='</div>';
+
+                        html+=    '<p class="name">'+t.goods_name+'</p>';
+
+                        html+='<div class="introduce">';
+
+                        html+=    ''+t.goods_body+'';
+
+                        html+='</div>';
+
+                        html+='<div class="bottom">';
+
+                        html+=    '<button class="button">立即支付</button>';
+
+                        html+='</div>';         
+                   $(".outer").html(html);
+                   //点击支付按钮
+                   $(".button").on("click",function(){
+                     $.ajax({
+                         type:"post",
+                         async:false,//同步
+                         url:config.domainApi+"/Goods_buy/pay",
+                         data:{
+                             cabinet_id:host_cabinet_id,//柜门id
+                             token:token,//唯一验证参数
+                             callback_url:window.location.href,
+                             code:code
+                         },
+                         success:function(res){ 
+                             checkLogin(res);                   
+                             if(res.state==0){
+                                 alert(res.msg);
+                             }else{//订单提交成功，生成订单
+                                 //alert(res.msg);
+                                 $("div.loading").css("display","block");
+                                 var queue_id=res.data.queue_id;
+                                 request(queue_id);
+                             }    
+                         }
+                     })
+                   })
+               }
+            }
+        })
+        //轮询队列函数
+        function request(id){
+            var timeClose = 0;
+             timer = setInterval(function() {
+		        if(timeClose > 20){
+                    clearInterval(timer);
+                    $("div.loading").css("display","none");
+                    alert("系统繁忙");
+                    return;
+		        }
+                 $.ajax({
+                 type:"post",
+                 async:false,
+                 url:config.domainApi+"/index/getQueueStatus",//请求轮询队列接口
+                 data:{
+                     queue_id:id,//轮询获取队列状态参数
+                     callback_url:window.location.href,
+                     code:code
+                 },
+                 success:function(res){
+                    checkLogin(res);
+                    if(res.state == 1){
+                        clearTimeout(timer);
+                        //拉起支付 
+                        var order_id=res.data.id;//订单ID 
+                        var pay_sn=res.data.pay_sn;
+                        pay_data(order_id,pay_sn);//调用微信支付参数
+                    }                               
+                 }
+             })
+             timeClose++;
+            }, 1000);
+        }
+        // 获取微信支付参数
+        function pay_data(order_id,pay_sn) { 
+            $.ajax({
+                type:"post",
+                async:true,
+                url:config.domainApi+"/Goods_buy/getWxPay",// 轮询获取订单支付状态
+                data:{
+                    order_id:order_id,
+                    callback_url:window.location.href,
+                    code:code
+                },
+                    success:function(res){
+                        if(res.state == 0){
+                            return;
+                        }else if(res.state == 4){
+                        $("div.loading").css("display","none");
+                        wx.chooseWXPay({                        
+        				timestamp: res.result.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+        				nonceStr: res.result.nonceStr, // 支付签名随机串，不长于 32 位
+        				package: res.result.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        				signType: res.result.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        				paySign: res.result.paySign, // 支付签名
+        				success: function(res) {
+                            location.href='pay.html?pay_sn='+pay_sn+'&order_id='+order_id+'';
+                            pSucc(res);//成功  
+        				},
+        				cancel: function(res) {
+        					pCancel(res);//用户取消
+        				},
+        				fail: function(res) {
+        					pFail(res);//失败
+        				}
+        			})
+                    }
+                 }
+            })
+        }
+        //获取权限
+        function getWxJsConfig(){
+            $.ajax({
+			url:config.domainApi+'/wechat/getWxJsConfig',
+			type:'get',
+			data:{
+				url:window.location.href//必须是当前url
+			},
+			success:function(e){
+				if(e.state != 1){
+					alert(e.msg);return false;
+				}
+				var data = {
+					    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					    appId: e.config.appId, // 必填，公众号的唯一标识
+					    timestamp: e.config.timestamp, // 必填，生成签名的时间戳
+					    nonceStr: e.config.nonceStr, // 必填，生成签名的随机串
+					    signature: e.config.signature,// 必填，签名
+					    jsApiList : [ 'checkJsApi'], // 必填，需要使用的JS接口列表
+					}
+				wx.config(data);	
+			},
+			error:function(){
+				alert('网络错误');
+			}
+		});
+        }
+</script>
+</html>

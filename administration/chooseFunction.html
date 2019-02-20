@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>选择功能</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+      var branch_id = getQueryString("branch_id"); //获取网点id
+      var branch_name=getLS("id");//获取网点名称
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+       }
+        div.content{
+            text-align:center;
+            padding-top:0.3rem;
+        }
+        div span{
+            font-size: 0.5rem;
+        }
+        div.content div{
+            border:0.03rem solid #70ABED;
+            width:9rem;
+            height:2rem;
+            border-radius: 0.1rem;
+            background-color:#B7F8D1;   
+            margin:0.3rem auto;
+        }
+        .number{
+            margin-top:0.1rem;
+            margin-right: 8rem;
+            margin-bottom: 0.1rem;
+        }
+        .title{
+            margin-top:0.7rem;
+            
+        }
+        div.content div{
+            color:#70ABED;
+            font-size:0.4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+            
+    </div>
+</body>
+<script src="../js/chooseFunction.js"></script>
+</html>

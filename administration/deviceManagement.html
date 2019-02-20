@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备管理</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+      var branch_id = getQueryString("branch_id"); //获取网点id
+      var branch_name=getLS("id");//获取网点名称
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+       }
+        div.top span{
+            font-size: 0.5rem;
+        }
+        div.top{
+            text-align:center;
+            border-bottom:0.05rem solid gray;
+            padding-top:0.3rem;
+            padding-bottom:0.2rem;
+        }
+        div.content{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+            margin-top:0.2rem;
+        }
+        div.content div{
+            border:0.03rem solid #70ABED;
+            width:3rem;
+            height:0.7rem;
+            padding-top:0.2rem;
+        }
+        div.bottom{
+            display:flex;
+            flex-wrap: wrap;
+            /*justify-content:space-between;*/
+        }
+        div.bottom div{
+            text-align: center;
+            border:0.03rem solid #70ABED;    
+            background-color: #B7F8D1;
+            width:3rem;
+            height:1rem;
+            margin:0 0.1rem;
+            margin-top:0.2rem;
+            border-radius: 0.2rem;
+            padding-top:0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <span>维也拉酒店设备管理</span>
+        <div class="content">
+            <div style="background-color:#B7F8D1">无需补货房间</div>
+            <div style="background-color:#F8ADAD">需补货房间</div>
+            <div style="color:#70ABED" onclick="salesRecords()">销售记录</div>
+        </div>
+    </div>
+    <div class="bottom">
+        
+    </div>
+</body>
+<script src="../js/deviceManagement.js"></script>
+</html>

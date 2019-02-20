@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+      var branch_id = getQueryString("branch_id"); //获取网点id
+      var branch_name=getLS("id");//获取网点名称
+      var host_id = getQueryString("host_id"); //获取设备id
+      var host_name=getLS("host_name");//获取房间名称
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+       }
+       div.top{
+           text-align: center;
+           border-bottom:0.05rem solid gray;
+           padding-top:0.3rem;
+       }
+       div.top p{
+           /*margin-right:8.2rem;*/
+           margin-top:0.2rem;
+           margin-bottom:0.1rem;
+           margin-left:-7.5rem;
+       }
+       div.top span{
+           font-size: 0.5rem;
+       }
+       .center{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+            margin:0.4rem 0;
+            
+       }
+       .center button{
+            border:0.03rem solid #70ABED;
+            width:4.5rem;
+            height:0.8rem;
+            border-radius: 0.1rem;
+            background-color:white;
+            font-size: 0.33rem;
+       }
+       div.bottom>p,div.bottom div{
+            border:0.03rem solid #70ABED;
+            width:4.5rem;
+            border-radius: 0.1rem;
+            text-align: center;
+       }
+       div.bottom{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+       }
+       div.bottom>div>div{
+           height:2rem;
+           background-color: #B7F8D1;
+       }
+       div.bottom>div>p{
+           height:0.6rem;
+           margin-top:0.1rem;
+       }
+       .name{
+           margin-top:0.5rem;
+       }
+       #alert{
+           background-color:#E5E5E5;
+           border-radius: 0.05rem;
+           text-align: center;
+           position:absolute;
+           top:6rem;
+           left:1rem;
+           display: none;
+           border:0.02rem solid #2A82E4;
+       }
+       #top{
+           background-color:#2A82E4;
+           width:8rem;
+           height:1rem;
+           line-height: 1rem;
+       }
+       #signature{
+           background-color:#fff;
+           width:7rem;
+           height:0.8rem;
+           margin:0.3rem auto;
+           font-size: 0.33rem;
+       }
+       #center input,#bottom button{
+           background-color:#fff;
+           font-size: 0.33rem;
+           border:0.01rem solid #2A82E4;
+           text-align: center;
+           margin-bottom: 0.3rem;
+       }
+       #center>:nth-child(1){
+           border-radius: 0.05rem;
+           margin-bottom: 0.2rem;
+           width:7rem;
+           height:0.8rem;
+       }
+       #bottom button{
+           border-radius: 0.1rem;
+           color:#2A82E4;
+           width:2.5rem;
+           height:0.7rem;
+           margin-top:0.1rem;
+       }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <span>维也拉酒店设备管理</span>
+        <p>401号房间</p>
+    </div>
+    <div class="center">
+        <button onclick="lowerShelf()">一键下架商品</button>
+        <button onclick="replenishment()">一键补货</button>
+    </div> 
+    <div class="bottom">
+       
+    </div>
+    <div id="alert">
+        <div id="top">x号柜门</div>
+        <select id="signature"> 
+                <option>商品1</option>
+                <option>商品2</option>
+        </select>
+        <div id="center">
+            <input type="text" value="" placeholder="更改价格">
+        </div>
+        <div id="bottom">
+            <button onclick="setPrice()">确定</button>
+        </div>
+    </div>
+</body>
+<script src="../js/products.js"></script>
+</html>

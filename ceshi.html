@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Access-Control-Allow-Origin" content="*">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="utf-8" />
+		<title>小明存包</title>
+		<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<!--<script type="text/javascript" src="../public/xiaoming/js/global_fun.js"></script>-->
+	</head>
+	<body>
+		<div onclick="sao();">扫一扫🐠飞飞鱼</div>
+		<div onclick="sao();">扫一扫🐠飞飞鱼</div>
+		<input name="MEI" placeholder="MEI" value="a3abce2a43ca6339">
+		<input name="lock_plate_dial" placeholder="锁板拨码号" value="1">
+		<input name="lock_play_channel_num" placeholder="通道号" value="1">
+		<input name="take_code" placeholder="取件码" value="5678">
+		<input name="order_id" placeholder="订单id" value="2">
+		<input name="number" placeholder="柜号" value="2">
+		<input name="clear_cabinet" placeholder="是否清除柜门信息" value="0">
+		<input name="o_t" placeholder="开柜类型" value="1">
+		<button id="send" onclick="send()">发送开柜指令</button>
+		<button id="send" onclick="pay()">支付</button>
+	</body>
+	
+	<script>
+		$.ajax({
+			url:'/api/wechat/getWxJsConfig',
+			type:'get',
+			data:{
+				url:'/xiuxiuda/ceshi.html'	//必须是当前url
+			},
+			success:function(e){
+				if(e.state != 1){
+					alert(e.msg);return false;
+				}
+				
+				var data = {
+					    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					    appId: e.config.appId, // 必填，公众号的唯一标识
+					    timestamp: e.config.timestamp, // 必填，生成签名的时间戳
+					    nonceStr: e.config.nonceStr, // 必填，生成签名的随机串
+					    signature: e.config.signature,// 必填，签名
+					    jsApiList : [ 'checkJsApi', 'startRecord', 'stopRecord','translateVoice','scanQRCode', 'openCard' ], // 必填，需要使用的JS接口列表
+					}
+				console.log(333333333,data);
+				wx.config(data);
+				
+			},
+			error:function(){
+				alert('网络错误');
+			}
+			
+		});
+		
+		var code = getUrlParam('code');
+		/* $.ajax({
+			url:'/api/save/index',
+			type:'get',
+			data:{
+				code:code,
+				callback_url:'/xiaoming/ceshi.html'
+			},
+			success:function(e){
+				if(e.state == 2){
+					location.href=e.redirect_url;
+				}
+				alert(e.msg);
+				console.log(111111111,e);
+			},
+			error:function(){
+				alert('网络错误');
+			}
+			
+		}); */
+		
+		/**
+		 * 获取url里面的参数(name)
+		 *
+		 **/
+	   function getUrlParam(name) {
+	       var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+	       var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+	
+	       if (r != null)
+	           return unescape(r[2]);
+	       return null; //返回参数值
+	   }
+		
+		function sao(){
+			wx.scanQRCode({
+				needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+				scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+				success: function (res) {
+					var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+				}
+			});
+		}
+		
+		function send(){
+			var param = {
+					MEI:$('input[name=MEI]').val(),
+					lock_plate_dial:$('input[name=lock_plate_dial]').val(),
+					lock_play_channel_num:$('input[name=lock_play_channel_num]').val(),
+					take_code:$('input[name=take_code]').val(),
+					order_id:$('input[name=order_id]').val(),
+					number:$('input[name=number]').val(),
+					o_t:$('input[name=o_t]').val(),
+					clear_cabinet:$('input[name=clear_cabinet]').val(),
+			};
+			
+			$.ajax({
+				url:'/api/save/openTest',
+				type:'get',
+				data:param,
+				success:function(e){
+					if(e.state == 2){
+						location.href=e.redirect_url;
+					}
+					alert(e.msg);
+					alert(e.res.error);
+					console.log(111111111,e);
+				},
+				error:function(){
+					alert('网络错误');
+				}
+				
+			});
+		}
+		
+		function pay(){
+			$.ajax({
+                type:"post",
+                async:true,
+                url:"/api/Goods_buy/getWxPay",// 轮询获取订单支付状态
+                data:{
+                    order_id:1073,
+                    callback_url:window.location.href,
+                    code:code
+                },
+                success:function(res){
+                	console.log(res);
+                	//定义微信支付接口
+        			wx.chooseWXPay({
+        				timestamp: res.result.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+        				nonceStr: res.result.nonceStr, // 支付签名随机串，不长于 32 位
+        				package: res.result.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        				signType: res.result.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        				paySign: res.result.paySign, // 支付签名
+        				success: function(res) {
+        					pSucc(res);
+        				},
+        				cancel: function(res) {
+        					pCancel(res);
+        				},
+        				fail: function(res) {
+        					pFail(res);
+        				}
+        			});
+                       
+				}
+            })
+			
+			
+			
+			
+			
+		}
+	</script>
+	
+</html>

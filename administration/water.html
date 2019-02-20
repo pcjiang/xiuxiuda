@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>流水查看</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+        }
+        .top{
+            font-size:0.55rem;
+            padding:0.3rem 0;
+            border-bottom: 0.03rem solid gray;
+        }
+        .top>span{
+            margin-left: 2.9rem;
+        }
+        .top input{
+            border:0.03rem solid #70ABED;
+            height:0.7rem;
+            width:2.5rem;
+            border-radius: 0.1rem;
+            padding:0;
+            text-align:center;
+            font-size:0.33rem;
+            margin-left:0.6rem;
+        }
+        div.center{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around; 
+        }
+        .water{
+            padding:0.4rem 0;
+        }
+        .water>p{
+            margin:0.2rem 0;
+        }
+        .tixian{
+            border:0.03rem solid #70ABED;
+            height:0.8rem;
+            width:3rem;
+            border-radius: 0.5rem;
+            padding:0;
+            text-align:center;
+            font-size:0.33rem;
+            margin-left:6.8rem;
+            background-color: white;
+            margin-bottom: 0.2rem;
+            color:#70ABED;
+        }
+        div.bottom>:nth-child(1){
+            border-left:0.06rem solid #70ABED;
+            height:0.7rem;
+            background-color: #E7E4E4;
+            line-height: 0.7rem;
+            padding-left:0.2rem;
+        }
+        .information{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+        }
+        .information p{
+            width:1.7rem;
+            height:0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <span>维也拉酒店流水</span><input type="date" value="2019-01-09" min="2015-09-16" max="2020-09-26" />
+    </div>
+    <div class="center">
+        <div class="water">
+            <p>总流水:</p><span>￥10000</span>
+            <p>昨日流水:</p><span>￥2000</span>
+        </div>
+        <div class="water">
+            <p>本月流水:</p><span>￥1000</span>
+            <p>今日流水:</p><span>￥100</span>
+        </div>
+        <div class="water">
+            <p>我的总分成:</p><span>￥2000</span>
+            <p>已提现:</p><span>￥1000</span>
+        </div>
+        <div class="water">
+            <p>分成比例:</p><span>1%</span>
+            <p>待提现:</p><span>￥1000</span>
+        </div>
+    </div>
+    <div><button class="tixian">申请提现</button></div>
+    <div class="bottom">
+        <div>详细记录</div>
+        <div class="information">
+            <p>用户</p>
+            <p>房间号</p>
+            <p>柜号</p>
+            <p>支付金额</p>
+            <p>支付时间</p>
+        </div>
+        <div class="information">
+            <p>微信昵称</p>
+            <p>405号</p>
+            <p>6</p>
+            <p>15元</p>
+            <p>2019.01.23 16:40</p>
+        </div>
+    </div>
+</body>
+</html>

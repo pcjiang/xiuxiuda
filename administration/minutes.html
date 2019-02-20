@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>销售记录</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+      var branch_id = getQueryString("branch_id"); //获取网点id
+      var branch_name=getLS("id");//获取网点名称
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+       }
+        div.top{
+            border-bottom:0.05rem solid gray;
+            text-align:center;
+            padding:0.3rem 0;
+            font-size:0.5rem;
+        }
+        div.center>:nth-child(1),.button{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+            padding:0.1rem 0;
+        }
+        div.center :nth-child(1) input{
+            border:0.03rem solid #70ABED;
+            height:0.7rem;
+            width:3rem;
+            border-radius: 0.1rem;
+            padding:0;
+            text-align:center;
+            font-size:0.33rem;
+        }
+        .button input,.button button{
+            height:0.7rem;
+            text-align: center;
+            background-color:white;
+            font-size: 0.33rem;
+            border:0.03rem solid #70ABED;
+        }
+        .button input{
+            width:5rem;
+        }
+        .button button{
+            width:2rem;
+            height:0.75rem;
+        }
+        div.bottom>:nth-child(1){
+            border-left:0.06rem solid #70ABED;
+            height:0.7rem;
+            background-color: #E7E4E4;
+            line-height: 0.7rem;
+            padding-left:0.2rem;
+        }
+        .information,.info{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+        }
+        .information>p,.info>p,.information>div{
+            width:1.7rem;
+            text-align: center;
+            margin:0.1rem 0;
+        }
+        .information img{
+            border-radius: 50%;
+            width:0.8rem;
+            height:0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <span>维也拉酒店设备管理</span>
+    </div>
+    <div class="center">
+        <div>
+            <input type="text" value="" placeholder="房间号" class="room">
+            <input type="text" value="" placeholder="柜门号" class="cabinet_id">
+            <input type="date" value="" min="2018-01-25" max="2022-09-26" class="date"/>
+        </div>
+        <div class="button">
+            <input type="text" value="" placeholder="微信昵称" class="name">
+            <button onclick="reset()">重置</button>
+            <button onclick="salesRecords()">搜索</button>
+        </div>
+    </div>
+    <div class="bottom">
+        <div>详细记录</div>
+        <div class="info">
+            <p>用户</p>
+            <p>柜号</p>
+            <p>支付金额</p>
+            <p>支付时间</p>
+        </div>
+    </div>
+</body>
+<script src="../js/minutes.js"></script>
+</html>

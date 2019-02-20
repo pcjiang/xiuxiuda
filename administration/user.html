@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户列表</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+      var code = getQueryString("code"); //获取微信code
+      var branch_id = getQueryString("branch_id"); //获取网点id
+      var role_list=getLS("role_list");//获取成员
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+        }
+        div.top{
+            border-bottom:0.05rem solid gray;
+            margin:0.1rem 0;
+        }
+        #top input,#top select,#center input{
+            border:0.02rem solid gray;
+            background-color: white;
+            text-align: center;
+            height:0.8rem;
+            font-size: 0.33rem;
+            margin:0.05rem 0;
+            border-radius: 0.1rem;
+        }
+        #top input,#center>:nth-child(1){
+            width:7rem;
+            margin-left:0.2rem;
+            margin-right:0.1rem;
+        }
+        #top select,#center>:nth-child(2){
+            width:2.3rem;
+            height:0.77rem;
+        }
+        option{
+            font-size: 0.2rem;
+        }
+        #bottom>button{
+            border:0.02rem solid #70ABED;
+            height:0.8rem;
+            background-color: white;
+            border-radius: 0.3rem;
+            width:5rem;
+            font-size: 0.33rem;
+            margin:0.1rem 0;
+        }
+        #bottom{
+            text-align: center;
+        }
+        .center>p{
+            font-size: 0.38rem;
+            margin:0.15rem 0;
+            margin-left:0.2rem;
+        }
+        .center input,.center button{
+            font-size: 0.33rem;
+            border-radius: 0.1rem;
+            text-align: center;
+            background-color: white;
+            border:0.02rem solid gray;
+            height:0.7rem;
+            margin:0.15rem 0;
+            margin-left:0.2rem;
+        }
+        .center input{
+            width:7rem;
+        }
+        .center button{
+            border-radius: 0.3rem;
+            width:2.3rem;
+            border:0.02rem solid #70ABED;
+        }
+        .bottom{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-between;
+        }
+        .bottom div{
+            text-align:center;
+            border:0.02rem solid gray;
+            border-radius: 0.1rem;
+            width:3rem;
+            height:3rem;
+            margin:0 0.1rem;
+            margin-top:0.1rem;
+        }
+        .bottom div>img{
+            width:1.5rem;
+            height:1.5rem;
+            border-radius: 50%;
+            margin-top:0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <div id="top">
+            <input type="text" value="" placeholder="输入姓名">
+            <select id="signature"> 
+                <option>补货员</option>
+                <option>店长</option>
+            </select>
+        </div>
+        <div id="center">
+            <input type="text" value="" placeholder="输入手机号" class="phone">
+            <input type="text" value="" placeholder="分成比例" style="opacity: 0;">
+        </div>
+        <div id="bottom">
+            <button onclick="add_members()">保存</button>
+        </div>
+    </div>
+    <div class="center">
+        <p>请选择要添加的用户：</p>
+        <input type="text" value="" placeholder="输入昵称">
+        <button onclick="user()">搜索</button>
+    </div>
+    <div class="bottom">
+        
+    </div>
+</body>
+<script src="../js/user.js"></script>
+</html>

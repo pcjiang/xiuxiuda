@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <title>留言反馈</title>
+    <style>
+		* {
+		    padding: 0;
+			font-size: 0.9rem;
+			margin: 0.3rem;
+		}
+		a{
+			text-decoration: none;
+		}
+		
+		.wrap .phone{
+			font-size: 0.5rem;
+		}
+		.wrap .content{
+			width: 90%;
+		    height: 5rem;
+			margin: 0.5rem 0;
+		}
+		.wrap .sub{
+		    width: 5rem;
+    		height: 2rem;
+		}
+		
+    </style>
+</head>
+ <body>
+	<div class="wrap">
+		<span>留言反馈：</span>
+		<textarea class="content" name="content_data" placeholder="请输入留言内容..."></textarea>
+		<input type="button" class="sub" name="" onclick="problem()" value="提交">
+	</div>
+</body>
+<script>
+
+
+function problem(){
+	content = $('.content').val();
+	$.ajax({
+		url:'/api/Problem/index',
+		type:'post',
+		data:{
+			content: content	//必须是当前url
+		},
+		success:function(e){
+			alert(e.msg);
+			location.replace(location);
+		},
+		error:function(e){
+			alert(e.msg);
+		}
+		
+	});
+}
+	
+</script>
+</body>
+</html>

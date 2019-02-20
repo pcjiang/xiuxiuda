@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>成员管理</title>
+    <!-- 调用css -->
+    <link rel="stylesheet" href="../css/base.css">
+    <!-- 调用js -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/function.js"></script>
+    <script type="text/javascript">
+      //计算rem
+      remInit(document);
+      var code = getQueryString("code"); //获取微信code
+      var branch_id = getQueryString("branch_id"); //获取网点id
+      var branch_name=getLS("id");//获取网点名称
+    </script>
+    <style>
+        body{
+           font-size: 0.33rem;
+        }
+        .top{
+            font-size:0.55rem;
+            text-align: center;
+            border-bottom: 0.03rem solid gray;
+            padding:0.3rem 0;
+        }
+        .center>button{
+            border:0.03rem solid #70ABED;
+            height:0.8rem;
+            width:3rem;
+            border-radius: 0.5rem;
+            text-align:center;
+            font-size:0.33rem;
+            margin:0.4rem 0;
+            margin-left:6.8rem;
+            background-color: white;
+            color:#70ABED;
+        }
+        div.bottom>:nth-child(1){
+            height:0.7rem;
+            background-color: #70ABED;
+            line-height: 0.7rem;
+        }
+        .info,.informations{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+            margin:0.1rem 0;
+        }
+        .info p,.informations p{
+            width:2.45rem;
+            height:0.8rem;
+            text-align: center;
+        }
+        .informations{
+            border:0.03rem solid #70ABED;
+            padding-top:0.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        
+    </div>
+    <div class="center">
+        <button onclick="add_members()">增加成员</button>
+    </div>
+    <div class="bottom">
+        <div class="info">
+            <p>角色</p>
+            <p>姓名</p>
+            <p>手机号</p>
+            <p>操作</p>
+        </div>
+    </div>
+</body>
+<script src="../js/men.js"></script>
+</html>

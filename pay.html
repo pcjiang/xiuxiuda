@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>支付</title>
+    <!-- 引入css -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/pay.css">
+    <!-- 调用js -->
+    <script src="js/jquery-3.2.1.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/function.js"></script>
+    <script type="text/javascript">
+        //计算rem
+        remInit(document);
+        var code = getQueryString("code"); //获取微信code
+        var pay_sn = getQueryString("pay_sn"); //获取支付编号
+        var order_id = getQueryString("order_id"); //获取订单id
+    </script>
+</head>
+<body style="height:100%">
+    <div class="outer">
+       <div class="center">
+           <img src="img/chengogng_icon.png" alt="" class="bigimg">
+           <p class="pay">支付成功，请等待出货</p>
+           <button class="button">(<span id="num">5</span>)重新开门</button>
+           <img src="img/line.png" alt="" class="line">
+           <p class="prompt">如未开门，请点击“重新开门”</p>
+           <p class="hint">按钮或者致电售后</p>
+           <div class="bottom">
+              <!-- <img src="img/icon_rexian.png" alt="" class="smallimg"> -->
+              <!-- <p>400-325-1256</p> -->
+           </div>
+       </div>
+    </div>
+</body>
+<script>
+    $(function(){//页面加载完成后执行
+        pay_request(pay_sn);
+        countDown(180, "null", btnProhibit);
+    })
+    //重新开门点击事件
+    $(".button").off("click").on("click",function(){
+        $(".button").prop({"disabled":"disabled"});   
+        $.ajax({
+            type:"post",
+            url:config.domainApi+'/Goods_buy/againOpen',//请求地址  
+            data:{
+                order_id:order_id,//订单ID
+                callback_url:window.location.href,
+                code:code,
+            },   
+            success:function(res){
+                checkLogin(res);
+                if(res.state==0){
+                    alert(res.msg);
+                    $(".button").html(res.msg);
+                }else{
+                    countDown(5, "num", btnRecovery);
+                    var record_id=res.data.record_id;
+                    getOpenCabinet(record_id);               
+                }
+            }     
+        })
+    })
+    //轮询获取开柜状态
+    function getOpenCabinet(record_id){
+            var timeClose = 0;
+             timer = setInterval(function() {
+		        if(timeClose > 20){
+                    clearInterval(timer);
+                    alert("系统繁忙");
+                    return;
+		        }
+                 $.ajax({
+                 type:"get",
+                 async:false,
+                 url:config.domainApi+"/save/openStatus",//请求轮询获取开柜状态
+                 data:{
+                     record_id:record_id,//轮询获取队列状态参数
+                     callback_url:window.location.href,
+                     code:code
+                 },
+                 success:function(res){
+                    checkLogin(res);
+                    if(res.state == 1){
+                        if(res.data.open_status == 1){
+                            clearTimeout(timer);
+                            var html="";
+                            html=res.data.open_status_text;
+                            $(".pay").html(html);
+                        }
+                    }
+                 }                    
+             })
+             timeClose++;
+            }, 1000);
+        }
+    //轮询获取订单支付状态
+    function pay_request(pay_sn){
+        var timeClose=0;
+        timer = setInterval(function(){
+            if(timeClose > 20){
+                clearInterval(timer);
+                alert("系统繁忙");
+                return false;
+            }
+            $.ajax({
+                type:"post",
+                async:false,
+                url:config.domainApi+"/Goods_buy/getPayStatus",// 轮询获取订单支付状态
+                data:{
+                  pay_sn:pay_sn,
+                  callback_url:window.location.href,
+                  code:code
+                },
+                success:function(res){
+                    checkLogin(res);
+                    if(res.state == 1){
+                        clearTimeout(timer);
+                        var record_id=res.data.record_id;//柜门记录id
+                        getOpenCabinet(record_id);//调用获取开柜状态     
+                    }
+                }
+            })
+            timeClose++;
+         },1000)      
+        }
+    //按钮恢复函数
+    function btnRecovery(id){
+        $("#" + id).html("5")
+        $("#" + id).parent('.button').removeAttr("disabled");
+    }
+    //按钮禁用函数
+    function btnProhibit(){
+        $(".button").prop({"disabled":"disabled"}).html("开柜超时,请联系客服。");
+        clearInterval(timer);
+    }
+</script>
+</html>

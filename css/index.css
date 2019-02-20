@@ -1,0 +1,101 @@
+
+/*外层容器*/
+.content{
+    display:flex;
+    width:100%;
+    height:100%;
+    flex-wrap: wrap;
+    justify-content:space-between;
+}
+/*里层容器*/
+.center{
+   /* margin:0.24rem 0.25rem 0.29333rem;*/
+    margin-top:0.24rem;
+    margin-right: 0.18rem;
+    margin-left: 0.18rem;
+    width:4.61333rem;
+    height:6.18666rem;
+    border-radius:0.13333rem;
+    position: relative;
+    background-color: #FFF;
+}
+/*背景图片*/
+.center .background{
+    /* position: absolute;
+    width:1.97333rem;
+    height:0.69333rem;
+    right:1.4333rem;
+    bottom:5.555rem;
+    z-index: 888; */
+	
+	position: absolute;
+    width: 1.97333rem;
+    height: 0.59rem;
+    right: 1.4333rem;
+    bottom: 5.6rem;
+    z-index: 888;
+}
+/*产品图片*/
+.center .chanpintu{
+    position: absolute;
+    right:0.22rem;
+    bottom:1.3rem;
+    width:4.22666rem;
+    height:4.33333rem;
+    z-index:20;
+}
+/*爆款*/
+.center .baokuan{
+    width:0.733333rem;
+    height:0.88rem;
+    position: absolute;
+    right:0.33333rem;
+    bottom:5.3rem;
+    z-index: 999;
+}
+.center .name{
+    font-size:0.373333rem;
+    font-family: PingFang-SC-Medium;
+    margin-top:4.8888rem;
+    margin-left:0.33333rem;
+}
+.center .price{
+    font-family: PingFang-SC-Medium;
+    font-size: 0.373333rem;
+    margin-left: 0.27111rem;
+    margin-top:0.111111rem;
+    color: red;
+}
+.center span{
+    font-family:PingFang-SC-Bold;
+    font-size: 0.346666rem;
+    position: absolute;
+    right:2.1rem;
+    top:0.011111rem;
+    z-index: 999999;
+}
+.qrcode{
+    display: block;
+    width:8rem;
+    height:8rem;
+    margin:0 auto;
+    margin-top:4rem;
+}
+.changePrice p{
+    float: left;
+}
+.originalPrice{
+    font-family: PingFang-SC-Medium;
+    font-size: 0.333rem;
+    margin-left: 0.2222rem;
+    margin-top:0.16666rem;
+    color: #999999;
+    text-decoration: line-through;
+    display: none;
+}
+p.show{
+    display: block;
+}
+
+
+
