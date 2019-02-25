@@ -1,0 +1,107 @@
+@charset "utf-8";//中文注释 必须加载顶部
+/*# sourceMappingURL=style.css.map */
+$red: #f00;
+div {
+    color: $red;
+}
+$top: top;
+div {
+    margin-#{$top}: 10px;
+    background: $red;
+}
+$color: blue !default;
+div {
+    color: $color;
+
+}
+$px: 5px 10px;
+div {
+    margin:nth($px,1) 0 0 nth($px, 2);
+}
+$headings: (h1: 2em, h2: 1.5em, h3: 1.2em);
+@each $header, $size in $headings {
+    #{$header} {
+        font-size:$size;
+    }
+}
+div {
+    padding: 2px * 4;
+    margin: (10px / 2);
+    font-size: 12px + 4;
+}
+div {
+    color: #333;
+    a {
+        font-size: 14px;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+.fakeshadow {
+    border: {
+        style: solid;
+        left: {
+            width: 4px;
+            color: #888;
+        }
+        right: {
+            width: 2px;
+            color: #ccc;
+        }
+    }
+}
+/*! 重要注释*/
+h1 {
+    font-size:20px;
+}
+div {
+    @extend h1;
+    color:red;
+}
+%h1 {
+    font-size:20px;
+}
+div {
+    @extend %h1;
+    color:red;
+}
+@mixin opacity($opacity:50) {
+    opacity: $opacity / 100;
+    filter: alpha(opacity=$opacity);
+}
+$fontSize: 10px;
+@function pxTorem($px) {
+    @return $px / $fontSize * 1rem;
+}
+div {
+    font-size: pxTOrem(16px);
+}
+$type: ocean;
+div {
+    @if $type == ocean {
+        color:blue;
+    } @else if $type == matador {
+        color: red;
+    } @else if $type == monster {
+        color: green;
+    } @else {
+        color: black;
+    }
+}
+$link-color: blue;
+a {
+    color:$link_color;
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Access-Control-Allow-Origin" content="*">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta charset="utf-8" />
+	<!--防止页面缓存-->
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<title>网点管理</title>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><!-- 引入JQ -->
+	<link rel="stylesheet" type="text/css" href="/public/emergency/css/reset.css" />
+	<script type="text/javascript">
+		//计算rem
+		var scale = 1 / devicePixelRatio;
+		if(document.documentElement.clientWidth < 375){
+			scale = 0.333;
+		}
+		document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+		document.documentElement.style.fontSize = document.documentElement.clientWidth /32+ 'px';
+	</script>
+	
+	<style>
+		*{
+			margin:0;
+			padding:0;
+			font-size:0.33rem;
+		}
+		.top{
+			margin-top:0.2rem;
+			margin-bottom:0;
+		}
+		.top input{
+			width:2.2rem;   
+			border:0.01rem solid gray;
+			text-align: center;
+			margin-top:0.3rem;
+		}
+		.top button{
+			width:1.5rem;
+			text-align: center;
+			background-color: #ccc;
+		}
+		.dataSelect{
+			margin:0 auto;
+		}
+		.placeSelect{
+			float:left;
+			width:100%;
+			height:1rem;
+			padding-bottom:0.2rem;
+			padding-top: 0.2rem;
+		}
+		.placeSelect span,select{
+			padding:0.01rem;
+		}
+		select,option,input,button{
+			height:0.8rem;
+		}
+		.placeSelect button{
+			width:1.5rem;
+            background-color: #ccc;
+		}
+		.bottom{
+			float:left;
+			margin-left:0.3rem;
+			padding-right:0.2rem;
+			width:100%;
+			height:1.8rem;
+		}
+		.bottom span{
+			border:0.05rem solid #ccc;
+			background-color:#ccc;
+		}
+		#cha3,#cha4,#cha5,.select{
+            height:0.73rem;
+            width:2.2rem;
+			text-align:center;
+			border:0.03rem solid #ccc;
+			margin-top: 0.3rem;
+		}
+        button{
+			width:1.5rem;
+		}
+		#result{position: relative;}
+		#result ul li b,#result ul li a,#result ul li span,#result ul li,.serve,#select{font-size: 0.3rem;}
+		#result button{height:0.8rem;display: block;float: left; margin-right: 0.2rem;}
+    	#result ul{border-bottom:0.02rem solid #000;position: relative;}
+		#result li{ display: block; margin:0.7rem 0;}
+    	#result .buttons{position:absolute; top:-1.2rem; left:3rem; }
+    	#result input{display:block;margin:0.2rem; float: right;}	
+		div.more{display: none;margin-left:3.5rem;font-size:0.5rem;}
+		#news{position: absolute;top:3rem;left:3rem;display:none;background-color: #ccc;text-decoration:none;font-size:0.33rem;width:5rem;}
+		#news span{position: absolute;right:0;}
+		#news .ul{line-height: 0.6rem;}
+		.state{
+			display: none;
+			position: absolute;
+			left:0.5rem;
+			top:4rem;
+			font-size:0.33rem;
+			border:1px solid red;
+			background-color: #ccc;
+		}
+		.info{
+            display:flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+        }
+        .info p{
+            width:2.5rem;
+            height:0.8rem;
+            text-align: center;
+        }
+		#lockId{
+			position: absolute;
+			right:0.1rem;
+			top:0.5rem;
+		}
+		#close{
+			position: absolute;
+			right:0.1rem;
+			top:-0.05rem;
+			font-size: 0.5rem;
+		}
+		#top{
+			height:0.7rem
+		}
+		#center button{
+			border:0.03rem solid gray;
+           	height:0.6rem;
+			width:2rem;
+           	text-align: center;
+           	margin-top:1rem;
+			margin-bottom:0.3rem;
+           	margin-left:0.2rem;
+           	background-color: white;
+		}
+		#button>button{
+			border:0.03rem solid gray;
+           	height:0.5rem;
+           	text-align: center;
+			background-color: white;
+			margin-bottom: 0.3rem;
+			margin-left:0.2rem;
+		}
+		#button img{
+			width:0.7rem;
+			height:0.7rem;
+		}
+		.red{
+			color:red;
+		}
+		.green{
+			color:green;
+		}
+	</style>
+</head>
+<body style="margin-left:0.2rem;">
+	<div>
+		<div>
+		 <div class="top">
+		  <input type="search" value="" id="cha1" name="筛选内容" placeholder="请输入网点" onclick="this.select()"/> 
+		  <button onclick="filterFun();equipmentStatus()">搜索</button>
+		  <button onclick="tcpPop()">管理员</button>
+		  <button onclick="reset()">重置</button>
+		  <input onclick="codeShow(this);this.select()" class="qrcode" value=""/>
+		  <span class="serve">
+		  	<span onclick="androidCleat()">重启</span>
+		  </span>
+		 </div> 
+		 <div class="placeSelect">
+			<select name="boardId" id="boardId" onclick="equipmentStatus()"> 
+			<option value=0>请选择</option>
+			<option>001</option>
+			<option>002</option>
+			<option>003</option>
+			</select>
+			<span id="select">未选择</span>
+		 </div>	
+		</div> 
+		<div class="center">
+		 <input id="cha3" name="lockId" class="lockId"  placeholder="请输入柜号" onclick="this.select()"/> 
+		 <input id="cha4" name="nickName" class="nickName" placeholder="请输入昵称" onclick="this.select()"/> 
+		 <input id="cha5" name="phone"  class="phone" placeholder="请输入手机号" onclick="this.select()"/> 
+		 <button onclick="loadPage(1)">搜 索</button>
+		</div>
+	</div>
+<div id="result">
+</div>
+<div class="more" page="1" onclick="loadMore(this)">点击加载更多...</div>
+<div id="news" onclick="tcpPop()"><span style="font-size:0.8rem">×</span><ul class="ul"></ul></div>
+<div class="state">
+	<div id="top">	
+	</div>
+	<div id="close">×</div>
+	<div id="lockId">柜号</div>
+	<div id="center">
+		<button class="one">故障</button><button class="two">清柜</button><button class="three">开柜记录</button>
+	</div>
+	<div id="button">
+	</div>
+</div>
+</body>
+<script>
+	$(function(){
+	$.ajax({
+			type: 'GET', //请求方式
+			async: true, //false 为同步请求，true为异步(默认)
+			url: '/Contingency/netJson',//请求地址
+			data: {}, //参数
+			success: function(res) {
+				var html="";
+				var p=res.data;
+				for(var i=0;i<p.length;i++){
+					html+='<option value='+p[i].id+' data-toggle='+p[i].netId+'>'+p[i].text+'</option>';
+				}
+				$("#boardId").html(html)
+			}, //请求成功回调
+			dataType: 'json'
+		});
+	})
+	var page=1;//第一页
+	//开柜
+	function openBox(e) {
+			if(confirm("确定要开当前柜子吗？")) {
+				var board_id = $(e).find('b').text();
+				var lock_id = $(e).find('i').text();
+				if(board_id && lock_id) {
+					//请求开锁
+					$.ajax({
+						type: 'GET', //请求方式
+						async: true, //false 为同步请求，true为异步(默认)
+						url: '/Contingency/openBorad', //请求地址
+						data: {
+							b_i: board_id,
+							l_i: lock_id
+						}, //{foo:bar1} 发送到服务器的数据
+						success: function(res) {
+							if(res.status == 0) {
+								alert('开锁失败！');
+							} else {
+								alert('开锁成功！');
+							}
+						}, //请求成功回调
+						dataType: 'json'
+					});
+				} else {
+					alert('参数丢失，请刷新后尝试！');
+				}
+			} else {
+				return false;
+			}
+		}
+		//说明提示信息
+		function alertShow() {
+			if(confirm("退费规则一：点击退款（一）,该规则使用订单退款，无需其他操作，退费成功后，返回成功信息！\n\r 退费规则二：点击退款（二）,根据用户提供的流水号，支付金额，填写退款信息，请务必填写正确！操作失误，后台无责！谨慎使用！")){
+				return false;
+			}else {
+				return false;
+			}
+		}
+		//退款事件
+		function refundAction(e) {
+			if(confirm("确定要退费该订单吗？")) {
+				var orderid = $(e).find('b').text();
+				$.ajax({
+					type: 'GET', //请求方式
+					async: true, //false 为同步请求，true为异步(默认)
+					url: '/Contingency/refundAction', //请求地址
+					data: {
+						orderid: orderid
+					}, //{foo:bar1} 发送到服务器的数据
+					success: function(res) {
+						if(res.state == 1) {
+							alert(res.message);
+						} else {
+							alert(res.message);
+						}
+					}, //请求成功回调
+					dataType: 'json'
+				});
+			} else {
+				return false;
+			}
+		}
+		//柜子状态
+		function refundActionTow(e){
+			var X = $(e).offset().top;
+			var Y = $(e).offset().left;
+			$(".state").css("top",X);
+			$(".state").css("display","block")
+			var board_id = $(e).find('b').text();
+			var lock_id = $(e).find('i').text();
+			if(board_id && lock_id){
+				$.ajax({
+						type: 'GET', //请求方式
+						async: true, //false 为同步请求，true为异步(默认)
+						url: '/Contingency/lockInfo', //请求地址
+						data: {
+							board_id: board_id,
+							lock_id: lock_id
+						}, 
+						success: function(res) {
+							var order_id=res.data.id == ""?"":res.data.id;
+							if(res.status == 0){
+								alert(res.message);
+							}else{
+								var p=res.data;
+								if(p.lock_status == 1){
+									var html="";
+									html+='<div><img src="'+p.head_img_url+'" width="25rem" height="25rem" alt="" /><span>'+p.nickname+'</span></div><div>--电话<a href="tel:'+p.phone+'">'+p.phone+'</a>--<span>'+p.addtime+'</span></div>'
+									$("#top").html(html);
+									$(".one").html("设为故障").prop({"disabled":"disabled"});
+									$(".two").removeAttr("disabled");
+									$("#lockId").html(lock_id+"号柜");
+									$(".two").off("click").on("click",function(){
+										clear(order_id);
+									})
+									$(".three").off("click").on("click",function(){
+										record(lock_id,board_id);
+									})
+								}else if(p.lock_status == 2){
+									$("#top").html("无人使用");
+									$(".one").html("设为故障").removeAttr("disabled");
+									$("#lockId").html(lock_id+"号柜");
+									$(".one").off("click").on("click",function(){
+										var status=$(".one").text() == "设为故障"?3:2;
+										change(lock_id,board_id,status);
+									})
+									$(".two").prop({"disabled":"disabled"});
+									$(".three").off("click").on("click",function(){
+										record(lock_id,board_id);
+									})
+								}else{
+									$("#top").html("故障柜");
+									$(".one").html("设为正常").removeAttr("disabled");
+									$("#lockId").html(lock_id+"号柜");
+									$(".one").off("click").on("click",function(){
+										var status=$(".one").text() == "设为故障"?3:2;
+										change(lock_id,board_id,status);
+									})
+									$(".two").prop({"disabled":"disabled"});
+									$(".three").off("click").on("click",function(){
+										record(lock_id,board_id);
+									})
+								}
+							}
+						}, //请求成功回调
+						dataType: 'json'
+					});
+			}		
+
+		}
+		//点击搜索动态生成网点
+		function filterFun(){
+				var str = $('#cha1').val();
+				$('#boardId option').prop("selected",false);
+				if(str==""){
+					$('#boardId option').show();
+					$('#boardId option').eq(0).prop("selected",true);		
+				}else{
+					$('#boardId option').hide();
+					
+					resultObj=$('#boardId :contains('+str+')');
+					resultObj.eq(0).prop("selected",true);
+					resultObj.show();
+				}
+		}
+		//是否在线
+		function equipmentStatus(){
+			    var boardId=$("#boardId").val();
+				var span=$("#select");
+					$.ajax({
+						type: 'get', //请求方式
+						async: true, //false 为同步请求，true为异步(默认)
+						url: '/Contingency/startSuccess', //请求地址
+						data:{
+							boardId: boardId
+						}, //参数
+						success: function(res) {
+							if(res.status == 1) {
+								span.html('在线');
+							} else {
+								span.html('离线');
+							}
+						}, //请求成功回调
+						dataType: 'json'
+					});
+				}
+		//管理员点击事件
+		function tcpPop(){
+			var netId=$("#boardId  option:selected").attr("data-toggle");
+			if(!netId) {
+				alert('请选择网点！');
+				return false;
+			}
+			//查看管理员
+			 $.ajax({
+				type: 'GET', //请求方式
+				async: true, //false 为同步请求，true为异步(默认)
+				url: '/Contingency/viewManagement', //请求地址
+				data: {
+					netId: netId
+				}, //参数
+				success: function(res) {
+					var html="";
+					var p=res;
+					for(var i=0;i<p.length;i++){
+						html+='<li><label>'+p[i].username+'------<a href="tel:'+p[i].telephone+'">'+p[i].telephone+'</a></label></li>'
+					}
+					$(".ul").html(html);
+					$("#news").css("display","block");
+				}, //请求成功回调
+				dataType: 'json'
+			});
+		}
+		//第一次搜索
+		function loadPage(num){
+		if(num==1){$('#result').html("");$(".more").attr("page",1)};
+        page=num;
+		var boardId=$("#boardId").val();
+		var nickName=$(".nickName").val();
+		var lockId=$(".lockId").val();
+		var phone=$(".phone").val();
+		$.ajax({
+           type:"get",
+		   async:true,
+           url:"/Contingency/OrderList",
+           data:{
+			boardId: boardId,
+			page: page,
+			nickName: nickName,
+			phone: phone,
+			lockId: lockId
+		   },//参数
+           success:function(res){
+			   if(res.list.length==0){
+                  alert("当前网点不存在")
+			   }else{
+                  var html="";
+				  if(res.page.is_has_next){
+					  $(".more").css('display','block');
+				  }
+				  var p=res.list;
+				  for(var i=0;i<p.length;i++){
+				  	var pStatus="";
+				  	if(p[i].status==0){pStatus="临时";}
+				  	else if(p[i].status==1){pStatus="进行中";pTime=p[i].addtime;}
+				  	else{pStatus="结束";pTime=p[i].endtime;}
+					  html+='<ul><li><img src="'+p[i].head_img_url+'" width="50rem" height="50rem" alt="" /><span>'+p[i].nickname+'</span></li><li class="info1"><b style="color:green">'+pStatus+'</b>--电话<a href="tel:'+p[i].phone+'">'+p[i].phone+'</a>--<span>'+pTime+'</span></li><li><span><i style="color: blue;">'+p[i].lock_id+'</i>号柜(<i style="color: rgb(204, 88, 33);">'+p[i].already_pay+'元</i>),'+p[i].board_id+','+p[i].net_name+'</span></li><li class="buttons"><button onclick="openBox(this)"><i style="display:none ;">'+p[i].lock_id+'</i><b style="display:none ;">'+p[i].board_id+'</b>开柜</button><button onclick="alertShow()">说明</button><button onclick="refundAction(this)"><b style="display:none;">'+p[i].id+'</b>退款</button><button onclick="refundActionTow(this)"><i style="display:none ;">'+p[i].lock_id+'</i><b style="display:none ;">'+p[i].board_id+'</b>柜子状态</button><br/><input align="center" type="text" value="'+p[i].openid+'" name="input1" onclick="this.select()" /></li></ul>'
+               }		
+           $('#result').append(html);
+              }
+			}
+           }
+       )
+	}	
+	    //点击加载更多	
+	    function loadMore(obj){
+		  page=$(obj).attr("page");
+		  $(".more").html("加载中").css("margin-left","4.6rem");
+	      var pageNow=page-(-1);
+		  $(obj).attr("page",pageNow)
+		  this.loadPage(pageNow);
+		}
+		//点击关闭管理员信息框
+		$("#news").find("span").on("click",function(e){
+			e.stopPropagation();//防止事件冒泡  
+			$("#news").css("display","none");
+		})
+		//显示二维码文本框
+		function codeShow(e){
+			var boardid =$("#boardId").val();
+			$('.qrcode').val("");
+			if(!boardid||boardid==0){
+				$('.qrcode').val("");
+				alert('参数错误！');	
+			} else {
+				$('.qrcode').val(window.location.host+"{:U('data/upload/scene')}/"+boardid+".png");
+			}
+		}
+		//重启安卓
+		function androidCleat() {
+					var boardId = $("#boardId").val();
+					if(boardId == '' || boardId == 0) {
+						alert('请选择网点!');
+						return false;
+					}
+					if(confirm("确定要重启安卓端吗？")) {  
+						alert("重启中");   
+						$.ajax({
+							type: 'GET', //请求方式
+							async: true, //false 为同步请求，true为异步(默认)
+							url: '/portal/index/update?board_id=' + boardId, //请求地址
+							data: {}, //{foo:bar1} 发送到服务器的数据
+							success: function(res) {
+							}, //请求成功回调
+							dataType: 'json'
+						});
+						ref = setInterval(function() {
+							$.ajax({
+								type: 'GET', //请求方式
+								async: true, //false 为同步请求，true为异步(默认)
+								url: '/Contingency/startSuccess?boardId=' + boardId, //请求地址
+								data: {}, //参数
+								success: function(res) {
+									if(res.status == 1) {
+										alert("重启完毕");
+										clearInterval(ref);
+									}
+								}, //请求成功回调
+								dataType: 'json'
+							});
+						}, 3000);
+					} else {
+						return false;
+					}
+				}
+		//重置
+		function reset(){
+			$(":input[name!='input1']").val("");
+			$("#boardId").val(0);//设置select默认选中value为0的值
+			$("#select").html("请选择");
+		}
+		//网点切换事件
+		$("#boardId").change(function(){
+			$("#select").html("...");
+			equipmentStatus();
+			if($("#boardId").find("option:selected").text()=="--请选择网点--"){
+				$("#select").html("请选择");
+			}
+		})
+		//设为故障或者正常
+		function change(lock_id,board_id,status){
+				$.ajax({
+					type:"get",
+					async:false,
+					url:"/contingency/setLockStatus",
+					data:{
+						lock_id:lock_id,
+						board_id:board_id,
+						status:status
+					},
+					success:function(res){
+						if(res.status == 0){
+							alert(res.message);
+						}else{
+							alert(res.message);
+							if(res.data.status == 2){
+								$(".one").html("设为故障");
+							}
+							if(res.data.status == 3){
+								$(".one").html("设为正常");
+							}
+						}
+					}
+			})
+		}
+		//清柜
+		function clear(order_id){
+			$.ajax({
+				type:"get",
+				async:false,
+				url:"/contingency/clearLock",
+				data:{
+					order_id:order_id,	
+				},
+				success:function(res){
+					if(res.status == 0){
+						alert(res.message);
+					}else{
+						alert(res.message);
+						equipmentStatus();
+					}
+				}
+			})
+		}
+		//柜子使用记录
+		function record(lock_id,board_id){   
+			$.ajax({
+				type:"get",
+				async:false,
+				url:"/contingency/lockHistory",
+				data:{
+					lock_id:lock_id,
+					board_id:board_id
+				},
+				success:function(res){
+					if(res.status == 0){
+						alert(res.info);
+					}else{
+						var html="",p=res.data;
+						for(var i=0;i<p.length;i++){
+							html+='<div class="info"><p>'+p[i].nickname+'</p><p><img src="'+p[i].head_img_url+'" alt=""></p><p class="'+p[i].type.class+'">'+p[i].type.text+'('+p[i].real_status+')</p><p>'+p[i].opentime+'</p></div>'
+						}
+						$("#button").html(html);
+					}
+				}
+			})
+		}
+		$("#close").on("click",function(){
+			$("#button").html("");
+			$(".state").css("display","none");
+		})
+</script>
+</html>
