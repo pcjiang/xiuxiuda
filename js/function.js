@@ -173,7 +173,7 @@ function countDown(seconds, id = 'null', callback) {
 }
 
 /**
- * 解码
+ * 编码
  * @param {string} str 字符串/汉字
  * @author 不知名网友 2019/2/27
  */
@@ -185,7 +185,7 @@ function decToHex(str) {
 }
 
 /**
- *
+ * 解码
  * @param {string} str
  * @author 不知名网友 2019/2/27
  */
